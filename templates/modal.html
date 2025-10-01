@@ -1,6 +1,6 @@
-    <!-- Modal -->
-    <div id="crudModal" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-800 bg-opacity-50">
-        <div id="crudModalContent" class="bg-white rounded-lg shadow-lg w-5/6 sm:w-3/5 md:w-1/2 lg:w-2/5 xl:w-1/3 max-h-screen overflow-y-auto">
+<!-- Modal -->
+<div id="crudModal" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div id="crudModalContent" class="bg-white rounded-lg shadow-lg w-5/6 sm:w-3/5 md:w-1/2 lg:w-2/5 xl:w-1/3 max-h-screen overflow-y-auto">
         <!-- Modal header -->
         <div class="flex items-center justify-between p-4 border-b">
             <div>
@@ -56,8 +56,13 @@
             <button type="button" id="cancelButton" class="order-2 sm:order-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-md font-medium hover:bg-gray-50 transition-colors text-center" onclick="hideModal()">Cancel</button>
             <button type="submit" id="submitNews" form="newsForm" class="order-1 sm:order-2 flex-1 bg-green-600 text-white px-6 py-3 rounded-md font-medium hover:bg-green-700 transition-colors">Publish News</button>
         </div>
+<<<<<<< HEAD
         </div>
     </div>
+=======
+    </div>
+</div>
+>>>>>>> 34f59bb82d92cf06462dd4e3a0e258cdf4bb52a8
 
 <script>
     function showModal() {
@@ -83,26 +88,21 @@
         }, 150); 
     }
 
-        async function addNewsEntry() {
-            await fetch("{% url 'main:add_news_entry_ajax' %}", {
-                method: "POST",
-                body: new FormData(document.querySelector('#newsForm')),
-            })
-        
-            document.getElementById("newsForm").reset();
-            hideModal();
-                
-            // Show toast notification
-            showToast('News added successfully!', '', 'success');
-        
-            // Dispatch custom event to notify main.html about new data
-            document.dispatchEvent(new CustomEvent('newsAdded'));
-        
-            return false;
-        }
-
-        document.getElementById("newsForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            addNewsEntry();
+    async function addNewsEntry() {
+        await fetch("{% url 'main:add_news_entry_ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#newsForm')),
         })
+
+        document.getElementById("newsForm").reset();
+        hideModal();
+            
+        // Show toast notification
+        showToast('News added successfully!', '', 'success');
+
+        // Dispatch custom event to notify main.html about new data
+        document.dispatchEvent(new CustomEvent('newsAdded'));
+
+        return false;
+        }
 </script>

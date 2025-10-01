@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from main.forms import NewsForm
 from main.models import News
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
@@ -9,7 +9,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import datetime
 from django.urls import reverse
-from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils.html import strip_tags
@@ -25,7 +24,7 @@ def show_main(request):
 
     context = {
         'npm' : '2406495584',
-        'name': 'Nadia Aisyah Fazila',
+        'name': request.user.username,
         'class': 'PBP C',
         'news_list': news_list,
         'last_login': request.COOKIES.get('last_login', 'Never')
@@ -108,7 +107,6 @@ def show_json_by_id(request, news_id):
         return JsonResponse(data)
     except News.DoesNotExist:
         return JsonResponse({'detail': 'Not found'}, status=404)
-    
 def register(request):
     form = UserCreationForm()
 

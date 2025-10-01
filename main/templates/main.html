@@ -14,6 +14,10 @@
         <h1 class="text-3xl font-bold text-gray-900 mb-2">Latest Football News</h1>
         <p class="text-gray-600">Stay updated with the latest football stories and analysis</p>
         </div>
+        <!-- Button to open modal -->
+        <button onclick="showModal()" class="inline-flex items-center px-4 py-2 bg-white text-green-600 font-semibold outline outline-2 outline-green-600 outline-offset-[-2px] rounded-md hover:bg-green-600 hover:text-white transition-colors mb-4">
+            Create News by AJAX
+        </button>
 
     <!-- Button to open modal -->
         <button onclick="showModal()" class="inline-flex items-center px-4 py-2 bg-white text-green-600 font-semibold outline outline-2 outline-green-600 outline-offset-[-2px] rounded-md hover:bg-green-600 hover:text-white transition-colors mb-4">
@@ -64,12 +68,11 @@
     </div>
 </div>
 
-
 <script>
     // Configuration
     const NEWS_API_ENDPOINT = "{% url 'main:show_json' %}";
     const CURRENT_USER_ID = "{{ user.id|default_if_none:'' }}";
-
+    
     // DOM Elements
     const loadingSpinner = document.getElementById('loading');
     const errorMessage = document.getElementById('error');
@@ -77,11 +80,11 @@
     const newsGridContainer = document.getElementById('grid');
     const showAllNewsButton = document.getElementById('filter-all');
     const showMyNewsButton = document.getElementById('filter-my');
-
+    
     // State Variables
     let activeFilter = 'all';
     let allNewsData = [];
-
+    
     // Update filter button appearance
     function updateFilterButtonsAppearance() {
         if (!showAllNewsButton || !showMyNewsButton) return;
@@ -94,7 +97,7 @@
             showAllNewsButton.className = 'bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors hover:bg-green-600 hover:text-white';
         }
         }
-
+        
         // Show/hide page sections
         function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
         loadingSpinner.classList.toggle('hidden', !showLoading);
@@ -107,7 +110,7 @@
             newsGridContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
         }
         }
-
+        
         // Get readable category name
         function getReadableCategoryName(categoryCode) {
         const categoryMapping = {
@@ -120,7 +123,7 @@
         };
         return categoryMapping[categoryCode] || categoryCode;
         }
-
+        
         // Create news card element
         function buildNewsCardElement(item) {
             const article = document.createElement('article');
@@ -188,32 +191,32 @@
             article.innerHTML = cardHtml;
             return article;
         }
-
+        
         // Render all news cards
         function renderAllNewsCards(newsItems) {
-            newsGridContainer.innerHTML = '';
-            newsItems.forEach(newsItem => {
-                const cardElement = buildNewsCardElement(newsItem);
-                newsGridContainer.appendChild(cardElement);
-            });
+        newsGridContainer.innerHTML = '';
+        newsItems.forEach(newsItem => {
+            const cardElement = buildNewsCardElement(newsItem);
+            newsGridContainer.appendChild(cardElement);
+        });
         }
-
+        
         // Filter and display news
         function filterAndDisplayNews() {
-            updateFilterButtonsAppearance();
-            
-            const filteredNews = activeFilter === 'all' 
-                ? allNewsData 
-                : allNewsData.filter(news => Number(news.user_id) === Number(CURRENT_USER_ID));
-            
-            if (filteredNews.length === 0) {
-                displayPageSection({ showEmpty: true });
-            } else {
-                renderAllNewsCards(filteredNews);
-                displayPageSection({ showGrid: true });
-            }
+        updateFilterButtonsAppearance();
+        
+        const filteredNews = activeFilter === 'all' 
+            ? allNewsData 
+            : allNewsData.filter(news => Number(news.user_id) === Number(CURRENT_USER_ID));
+        
+        if (filteredNews.length === 0) {
+            displayPageSection({ showEmpty: true });
+        } else {
+            renderAllNewsCards(filteredNews);
+            displayPageSection({ showGrid: true });
         }
-
+        }
+        
         // Fetch news data from server
         async function fetchNewsFromServer() {
         try {
@@ -222,11 +225,11 @@
             const response = await fetch(NEWS_API_ENDPOINT, {
             headers: { 'Accept': 'application/json' },
             });
-
+        
             if (!response.ok) {
             throw new Error('Failed to fetch news data from server');
             }
-
+        
             const newsData = await response.json();
             allNewsData = newsData || [];
             
@@ -235,27 +238,27 @@
             console.error('Error loading news:', error);
             displayPageSection({ showError: true });
         }
-    }
-
-    // Event handlers
-    function handleShowAllNewsClick() {
-    activeFilter = 'all';
-    filterAndDisplayNews();
-    }
-
-    function handleShowMyNewsClick() {
-    activeFilter = 'my';
-    filterAndDisplayNews();
-    }
-
-    // Initialize page
-    function initializeNewsPage() {
+        }
+        
+        // Event handlers
+        function handleShowAllNewsClick() {
+        activeFilter = 'all';
+        filterAndDisplayNews();
+        }
+        
+        function handleShowMyNewsClick() {
+        activeFilter = 'my';
+        filterAndDisplayNews();
+        }
+        
+        // Initialize page
+        function initializeNewsPage() {
         showAllNewsButton.addEventListener('click', handleShowAllNewsClick);
         showMyNewsButton.addEventListener('click', handleShowMyNewsClick);
         
         fetchNewsFromServer();
     }
-
+    
     // Start application
     initializeNewsPage();
 
@@ -263,11 +266,12 @@
     document.addEventListener('newsAdded', function() {
         // Refresh data without page reload
         fetchNewsFromServer();
+    });
 
+    document.getElementById("newsForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        addNewsEntry();
     })
-
-</script>
-
+    
+    </script>
 {% endblock content %}
-
-
