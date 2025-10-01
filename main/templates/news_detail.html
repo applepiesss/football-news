@@ -60,15 +60,9 @@
             <!-- Featured Image -->
             <div id="featured-image-container" class="px-6 sm:px-8 hidden">
                 <img id="featured-image" 
-<<<<<<< HEAD
-                     src="" 
-                     alt="" 
-                     class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg">
-=======
                     src="" 
                     alt="" 
                     class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg">
->>>>>>> 34f59bb82d92cf06462dd4e3a0e258cdf4bb52a8
             </div>
 
             <!-- Content -->
@@ -99,7 +93,7 @@
     // Configuration
     const NEWS_ID = "{{ news.id }}";
     const NEWS_DETAIL_ENDPOINT = `{% url 'main:show_json_by_id' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', NEWS_ID);
-    
+
     // DOM Elements
     const loadingState = document.getElementById('loading-state');
     const errorState = document.getElementById('error-state');
@@ -112,14 +106,14 @@
     const featuredImage = document.getElementById('featured-image');
     const articleContentText = document.getElementById('article-content-text');
     const articleAuthor = document.getElementById('article-author');
-    
+
     // Show/hide page sections
     function showState(state) {
         loadingState.classList.toggle('hidden', state !== 'loading');
         errorState.classList.toggle('hidden', state !== 'error');
         articleContent.classList.toggle('hidden', state !== 'ready');
     }
-    
+
     // Get readable category name
     function getCategoryLabel(categoryCode) {
         const categoryMapping = {
@@ -132,7 +126,7 @@
         };
         return categoryMapping[categoryCode] || categoryCode;
     }
-    
+
     // Render article content
     function renderArticle(news) {
         // Set title
@@ -191,7 +185,7 @@
         const authorName = news.user_username || 'Anonymous';
         articleAuthor.textContent = `Author: ${authorName}`;
     }
-    
+
     // Fetch news detail
     async function loadNewsDetail() {
         try {
@@ -200,11 +194,11 @@
             const response = await fetch(NEWS_DETAIL_ENDPOINT, {
                 headers: { 'Accept': 'application/json' },
             });
-    
+
             if (!response.ok) {
                 throw new Error('Failed to fetch news detail');
             }
-    
+
             const newsData = await response.json();
             renderArticle(newsData);
             showState('ready');
@@ -213,8 +207,9 @@
             showState('error');
         }
     }
-    
+
     // Initialize page
     loadNewsDetail();
-    </script>
+</script>
+
 {% endblock content %}

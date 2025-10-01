@@ -107,6 +107,7 @@ def show_json_by_id(request, news_id):
         return JsonResponse(data)
     except News.DoesNotExist:
         return JsonResponse({'detail': 'Not found'}, status=404)
+    
 def register(request):
     form = UserCreationForm()
 
